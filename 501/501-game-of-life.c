@@ -37,7 +37,7 @@ int count_cells();
 // Global 2-dim-array which contains the cells
 char cells[30][50];
 
-// Hello, World
+// Hello, World 2
 
 // Main program
 int main()
