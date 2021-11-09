@@ -46,7 +46,7 @@ char cells[FieldHeight][FieldWidth];
 // Main program
 int main()
 {
-   // setvbuf (stdout, NULL, _IONBF, 0);
+   setvbuf (stdout, NULL, _IONBF, 0);
 
    srand(time(0));
    initialize_cells();
