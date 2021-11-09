@@ -46,8 +46,11 @@ char cells[FieldHeight][FieldWidth];
 // Main program
 int main()
 {
+
    // setvbuf (stdout, NULL, _IONBF, 0);
    printf("\033[0m"); //reset any console Ootions (eg. color)
+   setvbuf (stdout, NULL, _IONBF, 0);
+  
    srand(time(0));
    initialize_cells();
 
