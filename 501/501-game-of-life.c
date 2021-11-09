@@ -35,8 +35,8 @@ void evolution_step();
 int count_cells();
 
 // Globale Variablen
-int FieldHeight = 30; //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
-int FieldWidth = 50;
+#define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
+#define FieldWidth 50
 
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
