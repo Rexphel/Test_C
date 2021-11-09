@@ -164,6 +164,8 @@ void evolution_step()
 {
    // TO DO: Use this array for the calculation of the next step
    char cells_helper[FieldHeight][FieldWidth];
+
+   cell_generation++;
 }
 
 // TO DO: Write a function that counts the occupied cells
