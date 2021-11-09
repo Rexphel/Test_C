@@ -38,6 +38,7 @@ int count_cells();
 char cells[30][50];
 
 // Hello, World 23
+// HELLO, THIS A  SIMPLE TEST
 
 // Main program
 int main()
