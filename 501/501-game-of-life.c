@@ -1,4 +1,4 @@
-c/* Game of life
+/* Game of life
 The "game of life" is an old and very simple approach of simulating evolution 
 A 2-dimensional field of cells is regarded with a cell being either empty/dead (0) or occupied/alive (1)
 The intial state can be chosen e.g. manually or using some random operations.
@@ -125,7 +125,6 @@ void display_cells()
                break;
             }
          }
-
       }
       printf("\n");
    }
