@@ -48,7 +48,6 @@ int main()
 {
    // setvbuf (stdout, NULL, _IONBF, 0);
 
-   printf("DEBUG");
    srand(time(0));
    initialize_cells();
 
@@ -70,7 +69,8 @@ int main()
 // TO DO: initialize cells, set most to 0, some to 1
 void initialize_cells()
 {
-   int i, j, rnd;
+   int i, j, rnd, cntr;
+   cntr=0;
    for (i = 0; i < FieldHeight; i++)
    {
       for (j = 0; j < FieldWidth; j++)
@@ -84,6 +84,9 @@ void initialize_cells()
          {
             cells[i][j] = 1;
          }
+         cntr++;
+         system("clear");
+         printf("Setting up Cell %i of %i Cells", cntr, (FieldWidth*FieldHeight));
       }
    }
 }
@@ -97,8 +100,30 @@ void display_cells()
    {
       for (j = 0; j < FieldWidth; j++)
       {
-         printf(" %d ", cells[i][j]);
-      
+         switch(cells[i][j])
+         {
+            case 0:
+            {
+               printf("\033[0;31m");
+               printf(" %d ", cells[i][j]);
+               printf("\033[0m");
+               break;
+            }
+            case 1:
+            {
+               printf("\033[0;32m");
+               printf(" %d ", cells[i][j]);
+               printf("\033[0m");
+               break;
+            }
+            default:
+            {
+               printf("\033[0;33m");
+               printf(" %d ", cells[i][j]);
+               printf("\033[0m");
+               break;
+            }
+         }
       }
       printf("\n");
    }
