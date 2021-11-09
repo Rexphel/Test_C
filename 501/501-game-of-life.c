@@ -40,13 +40,21 @@ int count_cells();
 #define FieldWidth 50
 #define max_active_rand 50 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 
+#define RED '\033[0;31m\0'
+#define GREEN '\033[0;32m\0'
+#define YELLOW '\033[0;33m\0'
+#define WHITE '\033[0;37m\0'
+
+
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
+int cell_generation;
 
 // Main program
 int main()
 {
    // setvbuf (stdout, NULL, _IONBF, 0);
+   cell_generation = 0;
    printf("\033[0m"); //reset any console Ootions (eg. color)
    srand(time(0));
    initialize_cells();
@@ -97,6 +105,8 @@ void initialize_cells()
 void display_cells()
 {
    int i, j;
+   char str;
+
    // system("CLS"); // Clear screen - works (at least) on windows console.
    for (i = 0; i < FieldHeight; i++)
    {
@@ -106,6 +116,10 @@ void display_cells()
          {
             case 0:
             {
+               /*strcat(str,RED);
+               strcat(str,cells[i][j]);
+               strcat(str,WHITE); */ //NOT WORKING.
+
                printf("\033[0;31m");
                printf(" %d ", cells[i][j]);
                printf("\033[0;37m");
@@ -113,6 +127,10 @@ void display_cells()
             }
             case 1:
             {
+               /*strcat(str,GREEN);
+               strcat(str,cells[i][j]);
+               strcat(str,WHITE); */ // NOT WORKING
+
                printf("\033[0;32m");
                printf(" %d ", cells[i][j]);
                printf("\033[0;37m");
@@ -120,15 +138,22 @@ void display_cells()
             }
             default:
             {
+               /*strcat(str,YELLOW);
+               strcat(str,cells[i][j]);
+               strcat(str,WHITE); */ // NOT WORKING
+               
                printf("\033[0;33m");
                printf(" %d ", cells[i][j]);
-               printf("\033[0;37m");
+               printf("\033[0;37m"); 
                break;
             }
          }
       }
       printf("\n");
+      //printf("%s\n", str);
+      
    }
+   printf("Currently showing Gen.: %i\n\n", cell_generation);
 }
 
 // TO DO: Write a function to calculate the next evolution step
