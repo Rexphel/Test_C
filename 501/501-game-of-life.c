@@ -29,6 +29,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #include <stdlib.h>
 #include <time.h>
 
+
 void initialize_cells();
 void display_cells();
 void evolution_step();
@@ -37,17 +38,19 @@ int count_cells();
 // Globale Variablen
 #define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
 #define FieldWidth 50
+#define max_active_rand 50 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
 
-// Hello, World 23
-
 // Main program
 int main()
 {
-   setvbuf (stdout, NULL, _IONBF, 0);
 
+   // setvbuf (stdout, NULL, _IONBF, 0);
+   printf("\033[0m"); //reset any console Ootions (eg. color)
+   setvbuf (stdout, NULL, _IONBF, 0);
+  
    srand(time(0));
    initialize_cells();
 
@@ -61,7 +64,6 @@ int main()
 
       printf("Press enter");
       getchar();
-// scudnfruidi
       evolution_step();
    }
 }
@@ -71,12 +73,15 @@ void initialize_cells()
 {
    int i, j, rnd, cntr;
    cntr=0;
+
+
+   printf("max_active_rand: %i, one_prob: %i\n", max_active_rand, (max_active_rand-1));
    for (i = 0; i < FieldHeight; i++)
    {
       for (j = 0; j < FieldWidth; j++)
       {
-         rnd = rand() % 10;
-         if (rnd < 9)
+         rnd = rand() % max_active_rand;
+         if (rnd < (max_active_rand-1))
          {
             cells[i][j] = 0;
          }
@@ -85,10 +90,10 @@ void initialize_cells()
             cells[i][j] = 1;
          }
          cntr++;
-         system("clear");
-         printf("Setting up Cell %i of %i Cells", cntr, (FieldWidth*FieldHeight));
+         printf("Setting up Cell %i of %i \r", cntr, (FieldWidth*FieldHeight));
       }
    }
+   printf("\n");
 }
 
 // TO DO: Write output function to show the cells
@@ -106,21 +111,21 @@ void display_cells()
             {
                printf("\033[0;31m");
                printf(" %d ", cells[i][j]);
-               printf("\033[0m");
+               printf("\033[0;37m");
                break;
             }
             case 1:
             {
                printf("\033[0;32m");
                printf(" %d ", cells[i][j]);
-               printf("\033[0m");
+               printf("\033[0;37m");
                break;
             }
             default:
             {
                printf("\033[0;33m");
                printf(" %d ", cells[i][j]);
-               printf("\033[0m");
+               printf("\033[0;37m");
                break;
             }
          }
