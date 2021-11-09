@@ -53,9 +53,12 @@ int cell_generation;
 // Main program
 int main()
 {
+
    // setvbuf (stdout, NULL, _IONBF, 0);
    cell_generation = 0;
    printf("\033[0m"); //reset any console Ootions (eg. color)
+   setvbuf (stdout, NULL, _IONBF, 0);
+  
    srand(time(0));
    initialize_cells();
 
