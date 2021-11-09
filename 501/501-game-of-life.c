@@ -61,7 +61,6 @@ int main()
 
       printf("Press enter");
       getchar();
-// scudnfruidi
       evolution_step();
    }
 }
