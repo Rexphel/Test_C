@@ -34,11 +34,14 @@ void display_cells();
 void evolution_step();
 int count_cells();
 
+// Globale Variablen
+int FieldWidth = 30; //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
+int FieldHeight = 50;
+
 // Global 2-dim-array which contains the cells
-char cells[30][50];
+char cells[FieldWidth][FieldHeight];
 
 // Hello, World 23
-// HELLO, THIS A  SIMPLE TEST
 
 // Main program
 int main()
@@ -68,9 +71,9 @@ int main()
 void initialize_cells()
 {
    int i, j, rnd;
-   for (i = 0; i < 30; i++)
+   for (i = 0; i < FieldWidth; i++)
    {
-      for (j = 0; j < 50; j++)
+      for (j = 0; j < FieldHeight; j++)
       {
          rnd = rand() % 10;
          if (rnd < 9)
@@ -90,9 +93,9 @@ void display_cells()
 {
    int i, j;
    // system("CLS"); // Clear screen - works (at least) on windows console.
-   for (i = 0; i < 30; i++)
+   for (i = 0; i < FieldWidth; i++)
    {
-      for (j = 0; j < 50; j++)
+      for (j = 0; j < FieldHeight; j++)
       {
          printf("%d", cells[i][j]);
       
@@ -105,7 +108,7 @@ void display_cells()
 void evolution_step()
 {
    // TO DO: Use this array for the calculation of the next step
-   char cells_helper[30][50];
+   char cells_helper[FieldWidth][FieldHeight];
 }
 
 // TO DO: Write a function that counts the occupied cells
@@ -113,11 +116,11 @@ int count_cells()
 {
    int i, j;
    int count = 0;
-   for (i = 0; i < 30; i++)
+   for (i = 0; i < FieldWidth; i++)
    {
-      for (j = 0; j < 50; j++)
+      for (j = 0; j < FieldHeight; j++)
       {
-         if (cells[i][j] == 0)
+         if (cells[i][j] == 1)
             count++;
       }
    }
