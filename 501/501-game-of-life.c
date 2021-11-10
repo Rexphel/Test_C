@@ -40,12 +40,6 @@ int count_cells();
 #define FieldWidth 50
 #define max_active_rand 50 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 
-#define RED '\033[0;31m\0'
-#define GREEN '\033[0;32m\0'
-#define YELLOW '\033[0;33m\0'
-#define WHITE '\033[0;37m\0'
-
-
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
 int cell_generation;
