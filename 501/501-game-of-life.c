@@ -184,7 +184,12 @@ void evolution_step()
          }
       }
    }
-}
+   for (i=0; i < FieldHeight; i++){
+      for (j=0; j < FieldWidth; j++){
+         cells[i][j] = NextGen[i][j];
+      }
+   }
+}  
 
 // TO DO: Write a function that counts the occupied cells
 int count_cells()
