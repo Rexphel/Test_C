@@ -189,6 +189,7 @@ void evolution_step()
          cells[i][j] = NextGen[i][j];
       }
    }
+   cell_generation++;
 }  
 
 // TO DO: Write a function that counts the occupied cells
