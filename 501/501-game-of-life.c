@@ -53,9 +53,9 @@ int cell_generation;
 // Main program
 int main()
 {
-
+   int occupied_cells;
    // setvbuf (stdout, NULL, _IONBF, 0);
-   cell_generation = 0;
+   cell_generation = occupied_cells = 0;
    printf("\033[0m"); //reset any console Ootions (eg. color)
    setvbuf (stdout, NULL, _IONBF, 0);
   
@@ -64,13 +64,14 @@ int main()
 
    while (1)
    {
-      display_cells();
 
+      occupied_cells = count_cells();
+      display_cells(occupied_cells);
       // Leave loop if there are no more occupied cells
-      if (count_cells() == 0)
+      if (occupied_cells == (FieldHeight*FieldWidth))
          break;
 
-      printf("Press enter");
+      printf("Press enter to show next Gen.");
       getchar();
       evolution_step();
    }
@@ -105,58 +106,53 @@ void initialize_cells()
 }
 
 // TO DO: Write output function to show the cells
-void display_cells()
+void display_cells(int occupied_cells)
 {
    int i, j;
    char str;
 
    // system("CLS"); // Clear screen - works (at least) on windows console.
+   printf("%c",201);
+   for (i=0; i<FieldWidth; i++) {
+      printf("%c%c%c",205,205,205);
+   }
+   printf("%c\n",187);
+   
    for (i = 0; i < FieldHeight; i++)
    {
+      printf("%c",186);
       for (j = 0; j < FieldWidth; j++)
       {
+         
          switch(cells[i][j])
          {
             case 0:
             {
-               /*strcat(str,RED);
-               strcat(str,cells[i][j]);
-               strcat(str,WHITE); */ //NOT WORKING.
-
-               printf("\033[0;31m");
-               printf(" %d ", cells[i][j]);
-               printf("\033[0;37m");
+               printf("   ");
                break;
             }
             case 1:
             {
-               /*strcat(str,GREEN);
-               strcat(str,cells[i][j]);
-               strcat(str,WHITE); */ // NOT WORKING
-
-               printf("\033[0;32m");
-               printf(" %d ", cells[i][j]);
-               printf("\033[0;37m");
+               printf(" %c ",248);
                break;
             }
             default:
             {
-               /*strcat(str,YELLOW);
-               strcat(str,cells[i][j]);
-               strcat(str,WHITE); */ // NOT WORKING
-               
-               printf("\033[0;33m");
-               printf(" %d ", cells[i][j]);
-               printf("\033[0;37m"); 
+               printf(" E ");
                break;
             }
          }
       }
-      printf("\n");
+      printf("%c\n",186);
       //printf("%s\n", str);
       
    }
-   printf("Currently showing Gen.: %i\n\n", cell_generation);
+   printf("%c",200);
+   for (i=0; i<FieldWidth; i++) {
+      printf("%c%c%c",205,205,205);
+   }
+   printf("%c\n",188);
+   printf("Currently showing Gen.: %i with %i occupied Cells.\n\n", cell_generation, occupied_cells);
 }
 
 // TO DO: Write a function to calculate the next evolution step
