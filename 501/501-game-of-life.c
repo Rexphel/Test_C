@@ -29,6 +29,8 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #include <stdlib.h>
 #include <time.h>
 
+#define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
+#define FieldWidth 50
 
 void initialize_cells();
 void display_cells();
@@ -36,9 +38,8 @@ void evolution_step();
 int count_cells();
 
 // Globale Variablen
-#define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
-#define FieldWidth 50
 #define max_active_rand 50 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
+
 
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
@@ -153,9 +154,36 @@ void display_cells(int occupied_cells)
 void evolution_step()
 {
    // TO DO: Use this array for the calculation of the next step
-   char cells_helper[FieldHeight][FieldWidth];
+   char NextGen[FieldHeight][FieldWidth];
+   int i,j,k,l;
+   for (i=0; i < FieldHeight; i++){
+      for (j=0; j < FieldWidth; j++){
 
-   cell_generation++;
+         int NachbarnLebend = 0;
+
+         for (int k=-1; k<=1; k++){
+            for (int l=-1; l <= 1; l++){
+               if (i+k !< 0 && i+k !> FieldHeight && j+l !< 0 && j+l !> FieldWidth){
+                  NachbarnLebend += cells[i+k][j+l];
+               }
+            }
+         }
+         NachbarnLebend -= cells[i][j];
+
+         if ((cells[i][j] == 1 && NachbarnLebend < 2 )|| (cells[i][j] == 1 && NachbarnLebend > 3 ))
+         {
+            NextGen[i][j] = 0;
+         }
+         else if (cells[i][j] == 0 && NachbarnLebend == 3)
+         {
+            NextGen[i][j] = 1;
+         }
+         else
+         {
+            NextGen[i][j] = cells[i][j];
+         }
+      }
+   }
 }
 
 // TO DO: Write a function that counts the occupied cells
