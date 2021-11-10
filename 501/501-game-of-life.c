@@ -20,7 +20,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 // TO DO: Complete the programm such that it simulates the game of life.
 //        Do this as teamwork (e.g. in teams with 2 or 3)
 //        and benefit from the fact the functions can developed separately and then integrated into the final program.
-// TO DO optional 1: extend the program, such that it detects 'stable states', i.e. the system is oscillating between a few states.
+// TO DO optional 1: extend the program, such that it detects 'stable states', i.e. the system is oscillating between a few states. @Rexphel
 // TO DO optional 2: let the program find a start state such that the system stays alive and unstable for as long as possible
 // TO DO optional 3: Create a flicker-free output: Do not print each character separately, but write the output into a string, which is printed all at once
 // TO DO optional 4: extend the program such that the content of the cells can be edited by the user.
