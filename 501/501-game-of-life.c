@@ -38,7 +38,7 @@ void evolution_step();
 int count_cells();
 
 // Globale Variablen
-#define max_active_rand 50 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
+#define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 
 
 // Global 2-dim-array which contains the cells
