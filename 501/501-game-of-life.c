@@ -163,8 +163,10 @@ void evolution_step()
 
          for (int k=-1; k<=1; k++){
             for (int l=-1; l <= 1; l++){
-               if (!(i+k < 0) || !(i+k > FieldHeight) || !(j+l < 0) || !(j+l > FieldWidth)){
-                  NachbarnLebend += cells[i+k][j+l];
+               if ((i+k >= 0) && (i+k <= FieldHeight)){
+                  if ((j+l >= 0) && (j+l <= FieldWidth)){
+                     NachbarnLebend += cells[i+k][j+l];
+                  }
                }
             }
          }
