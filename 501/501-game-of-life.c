@@ -28,6 +28,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
 #define FieldWidth 50
@@ -35,6 +36,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 void initialize_cells();
 void display_cells();
 void evolution_step();
+void check_stable();
 int count_cells();
 
 // Globale Variablen
@@ -43,6 +45,8 @@ int count_cells();
 
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
+char last_cell_states[3][FieldHeight][FieldWidth];
+char Flag_Stable, Flag_oscillating;
 int cell_generation;
 
 // Main program
@@ -51,6 +55,7 @@ int main()
    int occupied_cells;
    // setvbuf (stdout, NULL, _IONBF, 0);
    cell_generation = occupied_cells = 0;
+   Flag_Stable = Flag_oscillating = 0;
    printf("\033[0m"); //reset any console Ootions (eg. color)
    setvbuf (stdout, NULL, _IONBF, 0);
   
@@ -85,7 +90,7 @@ void initialize_cells()
       for (j = 0; j < FieldWidth; j++)
       {
          rnd = rand() % max_active_rand;
-         if (rnd < (max_active_rand-1))
+         if (rnd < round(max_active_rand - 1))
          {
             cells[i][j] = 0;
          }
@@ -147,8 +152,18 @@ void display_cells(int occupied_cells)
       printf("%c%c%c",205,205,205);
    }
    printf("%c\n",188);
-   printf("Currently showing Gen.: %i with %i occupied Cells.\n\n", cell_generation, occupied_cells);
-}
+   printf("Currently showing Gen.: %i with %i occupied Cells.\n", cell_generation, occupied_cells);
+   if (Flag_Stable == 1)
+   {
+      printf("Stable state reached. Cells will move no further.\n");
+   }
+   if (Flag_oscillating == 1)
+   {
+      printf("Oscillating state reached. Cells will oscillate between current and last state.\n");
+   }
+   printf("\n");
+}  
+
 
 // TO DO: Write a function to calculate the next evolution step
 void evolution_step()
@@ -189,9 +204,61 @@ void evolution_step()
          cells[i][j] = NextGen[i][j];
       }
    }
+
+   check_stable();
    cell_generation++;
 }  
 
+void check_stable() //last_cell_states[2] -> Vorletzter Move, last_cell_states[1] -> letzter Move, last_cell_states[0] -> aktueller Move
+{   
+   int i, j, dif_buffer1, dif_buffer2, Difference[1][FieldHeight][FieldWidth]; //Difference[0][][] -> aktueller <> letzter (stable), Difference[1][][] -> aktueller <> vorletzter Move (oscillating)
+   dif_buffer1 = dif_buffer2 = 0;
+   if (cell_generation >= 3)
+   {
+      printf("checking for stable or oscillating states...\n");
+      for (i=0; i < FieldHeight; i++)
+      {
+         for (j=0; j < FieldWidth; j++)
+         {
+            last_cell_states[2][i][j]=last_cell_states[1][i][j];
+            last_cell_states[1][i][j]=last_cell_states[0][i][j];
+            last_cell_states[0][i][j]=cells[i][j];
+         }
+
+      }
+      for (i=0; i < FieldHeight; i++)
+      {
+         for (j=0; j < FieldWidth; j++)
+         {
+            printf(" %c ", last_cell_states[2][i][j]);
+
+            if (last_cell_states[0][i][j] = last_cell_states[1][i][j])
+               {
+                  dif_buffer1++;
+                  //Difference[0][i][j] = 1
+               }
+            if (last_cell_states[0][i][j] = last_cell_states[2][i][j])
+               {
+                  dif_buffer2++;
+                  //Difference[1][i][j] = 1
+               }
+         }
+         printf("\n");
+      }
+
+
+
+      if (dif_buffer1 == (FieldHeight*FieldWidth))
+      {
+         Flag_Stable = 1;
+      }
+
+      if (dif_buffer2 == (FieldHeight*FieldWidth))
+      {
+         Flag_oscillating = 1;
+      }
+   }
+}
 // TO DO: Write a function that counts the occupied cells
 int count_cells()
 {
