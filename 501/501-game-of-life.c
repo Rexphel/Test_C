@@ -29,9 +29,13 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
 
+// Globale Variablen
+#define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 #define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
 #define FieldWidth 50
+#define AutoMode 1 //Automatikmodus? ja -> 1, nein -> 0
 
 void initialize_cells();
 void display_cells();
@@ -39,8 +43,6 @@ void evolution_step();
 void check_stable();
 int count_cells();
 
-// Globale Variablen
-#define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 
 
 // Global 2-dim-array which contains the cells
@@ -67,13 +69,24 @@ int main()
 
       occupied_cells = count_cells();
       display_cells(occupied_cells);
-      // Leave loop if there are no more occupied cells
-      if (occupied_cells == (FieldHeight*FieldWidth))
+
+      // Leave loop if there are no more free cells or a stable/oscillating state is reached
+      if (occupied_cells == (FieldHeight*FieldWidth) || Flag_Stable == 1 || Flag_oscillating == 1)
          break;
 
-      printf("Press enter to show next Gen.");
-      getchar();
+
+      if (AutoMode == 0)
+      {   
+         printf("Press enter to show next Gen.\n");
+         getchar();
+      }
+      else
+      {
+         printf("Autoplay... Just sit, have a cup of tea and wait.");
+         sleep(1);
+      }
       evolution_step();
+      
    }
 }
 
@@ -89,14 +102,15 @@ void initialize_cells()
    {
       for (j = 0; j < FieldWidth; j++)
       {
+         last_cell_states[0][i][j] = last_cell_states[1][i][j] = last_cell_states[2][i][j] = 0;
          rnd = rand() % max_active_rand;
          if (rnd < round(max_active_rand - 1))
          {
-            cells[i][j] = 0;
+            cells[i][j] = last_cell_states[0][i][j] = 0;
          }
          else
          {
-            cells[i][j] = 1;
+            cells[i][j] = last_cell_states[0][i][j] = 1;
          }
          cntr++;
          printf("Setting up Cell %i of %i \r", cntr, (FieldWidth*FieldHeight));
@@ -111,7 +125,7 @@ void display_cells(int occupied_cells)
    int i, j;
    char str;
 
-   // system("CLS"); // Clear screen - works (at least) on windows console.
+   system("CLS"); // Clear screen - works (at least) on windows console.
    printf("%c",201);
    for (i=0; i<FieldWidth; i++) {
       printf("%c%c%c",205,205,205);
@@ -215,7 +229,7 @@ void check_stable() //last_cell_states[2] -> Vorletzter Move, last_cell_states[1
    dif_buffer1 = dif_buffer2 = 0;
    if (cell_generation >= 3)
    {
-      printf("checking for stable or oscillating states...\n");
+      //printf("checking for stable or oscillating states...\n");
       for (i=0; i < FieldHeight; i++)
       {
          for (j=0; j < FieldWidth; j++)
@@ -230,22 +244,22 @@ void check_stable() //last_cell_states[2] -> Vorletzter Move, last_cell_states[1
       {
          for (j=0; j < FieldWidth; j++)
          {
-            printf(" %c ", last_cell_states[2][i][j]);
+            //printf(" %c ", last_cell_states[2][i][j]);
 
-            if (last_cell_states[0][i][j] = last_cell_states[1][i][j])
+            if (last_cell_states[0][i][j] == last_cell_states[1][i][j])
                {
                   dif_buffer1++;
                   //Difference[0][i][j] = 1
                }
-            if (last_cell_states[0][i][j] = last_cell_states[2][i][j])
+            if (last_cell_states[0][i][j] == last_cell_states[2][i][j])
                {
                   dif_buffer2++;
                   //Difference[1][i][j] = 1
                }
          }
-         printf("\n");
+         
       }
-
+   printf("dif_buffer1: %i, dif_buffer2: %i\n", dif_buffer1, dif_buffer2);
 
 
       if (dif_buffer1 == (FieldHeight*FieldWidth))
