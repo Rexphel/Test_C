@@ -12,11 +12,11 @@
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [  ],
             "stopAtEntry": false,
-            "cwd": "C:/MinGW/bin",
+            "cwd": "C:/msys64/mingw64/bin",
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
