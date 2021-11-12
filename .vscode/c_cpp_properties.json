@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**"
             ],
             "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:/MinGW/bin/gcc.exe",
+            "compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
             "cStandard": "c17",
             "cppStandard": "gnu++20",
             "intelliSenseMode": "windows-gcc-x64"
