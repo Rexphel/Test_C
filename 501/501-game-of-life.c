@@ -47,8 +47,8 @@ int count_cells();
 
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
-char last_cell_states[3][FieldHeight][FieldWidth];
-char Flag_Stable, Flag_oscillating;
+char last_cell_states[4][FieldHeight][FieldWidth];
+char Flag_stable, Flag_oscillating2, Flag_oscillating3;
 int cell_generation;
 
 // Main program
@@ -57,7 +57,7 @@ int main()
    int occupied_cells;
    // setvbuf (stdout, NULL, _IONBF, 0);
    cell_generation = occupied_cells = 0;
-   Flag_Stable = Flag_oscillating = 0;
+   Flag_stable = Flag_oscillating2 = Flag_oscillating3 = 0;
    printf("\033[0m"); //reset any console Ootions (eg. color)
    setvbuf (stdout, NULL, _IONBF, 0);
   
@@ -71,7 +71,7 @@ int main()
       display_cells(occupied_cells);
 
       // Leave loop if there are no more free cells or a stable/oscillating state is reached
-      if (occupied_cells == (FieldHeight*FieldWidth) || Flag_Stable == 1 || Flag_oscillating == 1)
+      if (occupied_cells == (FieldHeight*FieldWidth) || Flag_stable == 1 || Flag_oscillating2 == 1 || Flag_oscillating3 == 1)
          break;
 
 
@@ -82,8 +82,8 @@ int main()
       }
       else
       {
-         printf("Autoplay... Just sit, have a cup of tea and wait.");
-         sleep(1);
+         printf("Autoplay... Just sit, have a cup of tea and wait.\n");
+         //sleep(1);
       }
       evolution_step();
       
@@ -125,7 +125,7 @@ void display_cells(int occupied_cells)
    int i, j;
    char str;
 
-   system("CLS"); // Clear screen - works (at least) on windows console.
+   //system("CLS"); // Clear screen - works (at least) on windows console.
    printf("%c",201);
    for (i=0; i<FieldWidth; i++) {
       printf("%c%c%c",205,205,205);
@@ -167,13 +167,17 @@ void display_cells(int occupied_cells)
    }
    printf("%c\n",188);
    printf("Currently showing Gen.: %i with %i occupied Cells.\n", cell_generation, occupied_cells);
-   if (Flag_Stable == 1)
+   if (Flag_stable == 1)
    {
       printf("Stable state reached. Cells will move no further.\n");
    }
-   if (Flag_oscillating == 1)
+   if (Flag_oscillating2 == 1)
    {
       printf("Oscillating state reached. Cells will oscillate between current and last state.\n");
+   }
+   if (Flag_oscillating3 == 1)
+   {
+      printf("Oscillating state reached. Cells will oscillate between the last three states.\n");
    }
    printf("\n");
 }  
@@ -227,8 +231,8 @@ void evolution_step()
 
 void check_stable() //last_cell_states[2] -> Vorletzter Move, last_cell_states[1] -> letzter Move, last_cell_states[0] -> aktueller Move
 {   
-   int i, j, dif_buffer1, dif_buffer2, Difference[1][FieldHeight][FieldWidth]; //Difference[0][][] -> aktueller <> letzter (stable), Difference[1][][] -> aktueller <> vorletzter Move (oscillating)
-   dif_buffer1 = dif_buffer2 = 0;
+   int i, j, dif_buffer1, dif_buffer2, dif_buffer3, Difference[1][FieldHeight][FieldWidth]; //Difference[0][][] -> aktueller <> letzter (stable), Difference[1][][] -> aktueller <> vorletzter Move (oscillating)
+   dif_buffer1 = dif_buffer2 = dif_buffer3 = 0;
    if (cell_generation >= 3)
    {
       //printf("checking for stable or oscillating states...\n");
@@ -236,6 +240,7 @@ void check_stable() //last_cell_states[2] -> Vorletzter Move, last_cell_states[1
       {
          for (j=0; j < FieldWidth; j++)
          {
+            last_cell_states[3][i][j]=last_cell_states[2][i][j];
             last_cell_states[2][i][j]=last_cell_states[1][i][j];
             last_cell_states[1][i][j]=last_cell_states[0][i][j];
             last_cell_states[0][i][j]=cells[i][j];
@@ -251,27 +256,35 @@ void check_stable() //last_cell_states[2] -> Vorletzter Move, last_cell_states[1
             if (last_cell_states[0][i][j] == last_cell_states[1][i][j])
                {
                   dif_buffer1++;
-                  //Difference[0][i][j] = 1
                }
             if (last_cell_states[0][i][j] == last_cell_states[2][i][j])
                {
                   dif_buffer2++;
-                  //Difference[1][i][j] = 1
+               }
+
+               if (last_cell_states[0][i][j] == last_cell_states[3][i][j])
+               {
+                  dif_buffer3++;
                }
          }
          
       }
-   printf("dif_buffer1: %i, dif_buffer2: %i\n", dif_buffer1, dif_buffer2);
+   //printf("dif_buffer1: %i, dif_buffer2: %i\n", dif_buffer1, dif_buffer2);
 
 
       if (dif_buffer1 == (FieldHeight*FieldWidth))
       {
-         Flag_Stable = 1;
+         Flag_stable = 1;
       }
 
       if (dif_buffer2 == (FieldHeight*FieldWidth))
       {
-         Flag_oscillating = 1;
+         Flag_oscillating2 = 1;
+      }
+
+      if (dif_buffer3 == (FieldHeight*FieldWidth))
+      {
+         Flag_oscillating3 = 1;
       }
    }
 }
