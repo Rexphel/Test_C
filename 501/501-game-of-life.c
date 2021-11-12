@@ -20,7 +20,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 // TO DO: Complete the programm such that it simulates the game of life.
 //        Do this as teamwork (e.g. in teams with 2 or 3)
 //        and benefit from the fact the functions can developed separately and then integrated into the final program.
-// TO DO optional 1: extend the program, such that it detects 'stable states', i.e. the system is oscillating between a few states.
+// TO DO optional 1: extend the program, such that it detects 'stable states', i.e. the system is oscillating between a few states. @Rexphel
 // TO DO optional 2: let the program find a start state such that the system stays alive and unstable for as long as possible
 // TO DO optional 3: Create a flicker-free output: Do not print each character separately, but write the output into a string, which is printed all at once
 // TO DO optional 4: extend the program such that the content of the cells can be edited by the user.
@@ -38,30 +38,35 @@ void evolution_step();
 int count_cells();
 
 // Globale Variablen
+#define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 
 
 // Global 2-dim-array which contains the cells
 char cells[FieldHeight][FieldWidth];
-
-// Hello, World 23
+int cell_generation;
 
 // Main program
 int main()
 {
+   int occupied_cells;
+   // setvbuf (stdout, NULL, _IONBF, 0);
+   cell_generation = occupied_cells = 0;
+   printf("\033[0m"); //reset any console Ootions (eg. color)
    setvbuf (stdout, NULL, _IONBF, 0);
-
+  
    srand(time(0));
    initialize_cells();
 
    while (1)
    {
-      display_cells();
 
+      occupied_cells = count_cells();
+      display_cells(occupied_cells);
       // Leave loop if there are no more occupied cells
-      if (count_cells() == 0)
+      if (occupied_cells == (FieldHeight*FieldWidth))
          break;
 
-      printf("Press enter");
+      printf("Press enter to show next Gen.");
       getchar();
       evolution_step();
    }
@@ -72,12 +77,15 @@ void initialize_cells()
 {
    int i, j, rnd, cntr;
    cntr=0;
+
+
+   printf("max_active_rand: %i, one_prob: %i\n", max_active_rand, (max_active_rand-1));
    for (i = 0; i < FieldHeight; i++)
    {
       for (j = 0; j < FieldWidth; j++)
       {
-         rnd = rand() % 10;
-         if (rnd < 9)
+         rnd = rand() % max_active_rand;
+         if (rnd < (max_active_rand-1))
          {
             cells[i][j] = 0;
          }
@@ -86,48 +94,60 @@ void initialize_cells()
             cells[i][j] = 1;
          }
          cntr++;
-         system("clear");
-         printf("Setting up Cell %i of %i Cells", cntr, (FieldWidth*FieldHeight));
+         printf("Setting up Cell %i of %i \r", cntr, (FieldWidth*FieldHeight));
       }
    }
+   printf("\n");
 }
 
 // TO DO: Write output function to show the cells
-void display_cells()
+void display_cells(int occupied_cells)
 {
    int i, j;
+   char str;
+
    // system("CLS"); // Clear screen - works (at least) on windows console.
+   printf("%c",201);
+   for (i=0; i<FieldWidth; i++) {
+      printf("%c%c%c",205,205,205);
+   }
+   printf("%c\n",187);
+   
    for (i = 0; i < FieldHeight; i++)
    {
+      printf("%c",186);
       for (j = 0; j < FieldWidth; j++)
       {
+         
          switch(cells[i][j])
          {
             case 0:
             {
-               printf("\033[0;31m");
-               printf(" %d ", cells[i][j]);
-               printf("\033[0m");
+               printf("   ");
                break;
             }
             case 1:
             {
-               printf("\033[0;32m");
-               printf(" %d ", cells[i][j]);
-               printf("\033[0m");
+               printf(" %c ",248);
                break;
             }
             default:
             {
-               printf("\033[0;33m");
-               printf(" %d ", cells[i][j]);
-               printf("\033[0m");
+               printf(" E ");
                break;
             }
          }
       }
-      printf("\n");
+      printf("%c\n",186);
+      //printf("%s\n", str);
+      
    }
+   printf("%c",200);
+   for (i=0; i<FieldWidth; i++) {
+      printf("%c%c%c",205,205,205);
+   }
+   printf("%c\n",188);
+   printf("Currently showing Gen.: %i with %i occupied Cells.\n\n", cell_generation, occupied_cells);
 }
 
 // TO DO: Write a function to calculate the next evolution step
@@ -143,7 +163,7 @@ void evolution_step()
 
          for (int k=-1; k<=1; k++){
             for (int l=-1; l <= 1; l++){
-               if (i+k !< 0 && i+k !> FieldHeight && j+l !< 0 && j+l !> FieldWidth){
+               if (!(i+k < 0) || !(i+k > FieldHeight) || !(j+l < 0) || !(j+l > FieldWidth)){
                   NachbarnLebend += cells[i+k][j+l];
                }
             }
@@ -164,7 +184,13 @@ void evolution_step()
          }
       }
    }
-}
+   for (i=0; i < FieldHeight; i++){
+      for (j=0; j < FieldWidth; j++){
+         cells[i][j] = NextGen[i][j];
+      }
+   }
+   cell_generation++;
+}  
 
 // TO DO: Write a function that counts the occupied cells
 int count_cells()
