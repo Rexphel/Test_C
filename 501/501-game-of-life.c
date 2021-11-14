@@ -140,7 +140,7 @@ void display_cells(int occupied_cells)
    char output[5000];
    int outputIndex = 0;
 
-   //system("CLS"); // Clear screen - works (at least) on windows console.
+   system("CLS"); // Clear screen - works (at least) on windows console.
 //    printf("%c",201);
    output[outputIndex++] = 201;
    for (i=0; i<FieldWidth; i++) {
@@ -211,9 +211,8 @@ void display_cells(int occupied_cells)
     output[outputIndex++] = 188;
     output[outputIndex++] = '\n';
 
-    printf("%s", output);
-
-    printf("%d\n", outputIndex);
+    // printf("%s", output);
+    puts(output); // Use puts for faster printing. Writing to string and using printf is not faster (not "flicker-free")
 
    printf("Currently showing Gen.: %i with %i occupied Cells.\n", cell_generation, occupied_cells);
    if (Flag_stable == 1)
