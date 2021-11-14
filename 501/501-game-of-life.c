@@ -30,6 +30,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #include <time.h>
 #include <math.h>
 #include <unistd.h>
+#include <signal.h>
 
 // Globale Variablen
 #define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
@@ -42,7 +43,7 @@ void display_cells();
 void evolution_step();
 void check_stable();
 int count_cells();
-
+void cancel_handler();
 
 
 // Global 2-dim-array which contains the cells
@@ -50,6 +51,8 @@ char cells[FieldHeight][FieldWidth];
 char last_cell_states[4][FieldHeight][FieldWidth];
 char Flag_stable, Flag_oscillating2, Flag_oscillating3;
 int cell_generation;
+
+static volatile int keepRunning = 1;
 
 // Main program
 int main()
@@ -64,7 +67,9 @@ int main()
    srand(time(0));
    initialize_cells();
 
-   while (1)
+    signal(SIGINT, cancel_handler);
+
+   while (keepRunning)
    {
 
       occupied_cells = count_cells();
@@ -75,19 +80,27 @@ int main()
          break;
 
 
-      if (AutoMode == 0)
-      {   
-         printf("Press enter to show next Gen.\n");
-         getchar();
+      if (keepRunning) {
+        if (AutoMode == 0)
+        {   
+            printf("Press enter to show next Gen.\n");
+            getchar();
+        }
+        else
+        {
+            printf("Autoplay... Just sit, have a cup of tea and wait.\n");
+            sleep(1);
+        }
+        evolution_step();
+      } else {
+        printf("\n");
       }
-      else
-      {
-         printf("Autoplay... Just sit, have a cup of tea and wait.\n");
-         //sleep(1);
-      }
-      evolution_step();
-      
+
    }
+}
+
+void cancel_handler() {
+    keepRunning = 0;
 }
 
 // TO DO: initialize cells, set most to 0, some to 1
