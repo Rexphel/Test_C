@@ -36,7 +36,7 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 #define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
 #define FieldWidth 50
-#define AutoMode 1 //Automatikmodus? ja -> 1, nein -> 0
+// #define AutoMode 1 //Automatikmodus? ja -> 1, nein -> 0
 
 void initialize_cells();
 void display_cells();
@@ -44,6 +44,7 @@ void evolution_step();
 void check_stable();
 int count_cells();
 void cancel_handler();
+void autoModeHandler();
 
 
 // Global 2-dim-array which contains the cells
@@ -51,6 +52,7 @@ char cells[FieldHeight][FieldWidth];
 char last_cell_states[4][FieldHeight][FieldWidth];
 char Flag_stable, Flag_oscillating2, Flag_oscillating3;
 int cell_generation;
+int AutoMode = 0;
 
 static volatile int keepRunning = 1;
 
@@ -68,6 +70,8 @@ int main()
    initialize_cells();
 
     signal(SIGINT, cancel_handler);
+
+    autoModeHandler();
 
    while (keepRunning)
    {
@@ -92,15 +96,30 @@ int main()
             sleep(1);
         }
         evolution_step();
-      } else {
-        printf("Bye\n");
       }
 
    }
 }
 
+void autoModeHandler() {
+    printf("Should the programm wait for input? (Y/n)");
+    char key = getchar();
+    switch (key) {
+    case 'n':
+    case 'N':
+        printf("AutoMode off!\n");
+        AutoMode = 0;
+        break;
+    default:
+        printf("AutoMode on!\n");
+        AutoMode = 1;
+        break;
+    }
+}
+
 void cancel_handler() {
     keepRunning = 0;
+    printf("Exiting...");
 }
 
 // TO DO: initialize cells, set most to 0, some to 1
