@@ -93,7 +93,7 @@ int main()
         }
         evolution_step();
       } else {
-        printf("\n");
+        printf("Bye\n");
       }
 
    }
@@ -137,17 +137,26 @@ void display_cells(int occupied_cells)
 {
    int i, j;
    char str;
+   char output[5000];
+   int outputIndex = 0;
 
    //system("CLS"); // Clear screen - works (at least) on windows console.
-   printf("%c",201);
+//    printf("%c",201);
+   output[outputIndex++] = 201;
    for (i=0; i<FieldWidth; i++) {
-      printf("%c%c%c",205,205,205);
+    //   printf("%c%c%c",205,205,205);
+      output[outputIndex++] = 205;
+      output[outputIndex++] = 205;
+      output[outputIndex++] = 205;
    }
-   printf("%c\n",187);
+//    printf("%c\n",187);
+   output[outputIndex++] = 187;
+   output[outputIndex++] = '\n';
    
    for (i = 0; i < FieldHeight; i++)
    {
-      printf("%c",186);
+    //   printf("%c",186);
+      output[outputIndex++] = 186;
       for (j = 0; j < FieldWidth; j++)
       {
          
@@ -155,30 +164,57 @@ void display_cells(int occupied_cells)
          {
             case 0:
             {
-               printf("   ");
+            //    printf("   ");
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = ' ';
                break;
             }
             case 1:
             {
-               printf(" %c ",248);
+            //    printf(" %c ",248);
+               
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = 248;
+                output[outputIndex++] = ' ';
                break;
             }
             default:
             {
-               printf(" E ");
+            //    printf(" E ");
+               
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = 'E';
+                output[outputIndex++] = ' ';
                break;
             }
          }
       }
-      printf("%c\n",186);
+    //   printf("%c\n",186);
+      
+      output[outputIndex++] = 186;
+      output[outputIndex++] = '\n';
       //printf("%s\n", str);
       
    }
-   printf("%c",200);
+//    printf("%c",200);
+      output[outputIndex++] = 200; 
    for (i=0; i<FieldWidth; i++) {
-      printf("%c%c%c",205,205,205);
+    //   printf("%c%c%c",205,205,205);
+    
+        output[outputIndex++] = 205;
+        output[outputIndex++] = 205;
+        output[outputIndex++] = 205;
    }
-   printf("%c\n",188);
+//    printf("%c\n",188);
+
+    output[outputIndex++] = 188;
+    output[outputIndex++] = '\n';
+
+    printf("%s", output);
+
+    printf("%d\n", outputIndex);
+
    printf("Currently showing Gen.: %i with %i occupied Cells.\n", cell_generation, occupied_cells);
    if (Flag_stable == 1)
    {
