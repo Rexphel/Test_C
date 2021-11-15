@@ -107,12 +107,12 @@ void autoModeHandler() {
     switch (key) {
     case 'n':
     case 'N':
-        printf("AutoMode off!\n");
-        AutoMode = 0;
-        break;
-    default:
         printf("AutoMode on!\n");
         AutoMode = 1;
+        break;
+    default:
+        printf("AutoMode off!\n");
+        AutoMode = 0;
         break;
     }
 }
