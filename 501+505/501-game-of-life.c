@@ -249,11 +249,8 @@ void display_cells(int occupied_cells)
    printf("\n");
 }  
 
-
-// TO DO: Write a function to calculate the next evolution step
 void evolution_step()
 {
-   // TO DO: Use this array for the calculation of the next step
    char NextGen[FieldHeight][FieldWidth];
    int i,j,k,l;
    for (i=0; i < FieldHeight; i++){
@@ -263,16 +260,14 @@ void evolution_step()
 
          for (int k=-1; k<=1; k++){
             for (int l=-1; l <= 1; l++){
-               if ((i+k >= 0) && (i+k <= FieldHeight)){
-                  if ((j+l >= 0) && (j+l <= FieldWidth)){
+               if ((i+k >= 0) && (i+k < FieldHeight) && (j+l >= 0) && (j+l < FieldWidth)){
                      NachbarnLebend += cells[i+k][j+l];
-                  }
                }
             }
          }
          NachbarnLebend -= cells[i][j];
 
-         if ((cells[i][j] == 1 && NachbarnLebend < 2 )|| (cells[i][j] == 1 && NachbarnLebend > 3 ))
+         if ((cells[i][j] == 1 && NachbarnLebend < 2 ) || (cells[i][j] == 1 && NachbarnLebend > 3 ))
          {
             NextGen[i][j] = 0;
          }
