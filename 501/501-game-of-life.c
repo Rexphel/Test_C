@@ -30,19 +30,21 @@ see: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 #include <time.h>
 #include <math.h>
 #include <unistd.h>
+#include <signal.h>
 
 // Globale Variablen
 #define max_active_rand 10 //Max Wert für den Randomgenerator. Wahrscheinlichkeit für 1 = round(max_active_rand - (0.025 * max_active_rand)). Je größer die Konstante, desto weniger 1er kommen vor
 #define FieldHeight 30 //Feldgröße Definiert TODO: Beim Start den Nutzer nach feldgröße Fragen?
 #define FieldWidth 50
-#define AutoMode 1 //Automatikmodus? ja -> 1, nein -> 0
+// #define AutoMode 1 //Automatikmodus? ja -> 1, nein -> 0
 
 void initialize_cells();
 void display_cells();
 void evolution_step();
 void check_stable();
 int count_cells();
-
+void cancel_handler();
+void autoModeHandler();
 
 
 // Global 2-dim-array which contains the cells
@@ -50,6 +52,9 @@ char cells[FieldHeight][FieldWidth];
 char last_cell_states[4][FieldHeight][FieldWidth];
 char Flag_stable, Flag_oscillating2, Flag_oscillating3;
 int cell_generation;
+int AutoMode = 0;
+
+static volatile int keepRunning = 1;
 
 // Main program
 int main()
@@ -64,7 +69,11 @@ int main()
    srand(time(0));
    initialize_cells();
 
-   while (1)
+    signal(SIGINT, cancel_handler);
+
+    autoModeHandler();
+
+   while (keepRunning)
    {
 
       occupied_cells = count_cells();
@@ -75,19 +84,42 @@ int main()
          break;
 
 
-      if (AutoMode == 0)
-      {   
-         printf("Press enter to show next Gen.\n");
-         getchar();
+      if (keepRunning) {
+        if (AutoMode == 0)
+        {   
+            printf("Press enter to show next Gen.\n");
+            getchar();
+        }
+        else
+        {
+            printf("Autoplay... Just sit, have a cup of tea and wait.\n");
+            sleep(1);
+        }
+        evolution_step();
       }
-      else
-      {
-         printf("Autoplay... Just sit, have a cup of tea and wait.\n");
-         //sleep(1);
-      }
-      evolution_step();
-      
+
    }
+}
+
+void autoModeHandler() {
+    printf("Should the programm wait for input? (Y/n)");
+    char key = getchar();
+    switch (key) {
+    case 'n':
+    case 'N':
+        printf("AutoMode on!\n");
+        AutoMode = 1;
+        break;
+    default:
+        printf("AutoMode off!\n");
+        AutoMode = 0;
+        break;
+    }
+}
+
+void cancel_handler() {
+    keepRunning = 0;
+    printf("Exiting...");
 }
 
 // TO DO: initialize cells, set most to 0, some to 1
@@ -124,17 +156,26 @@ void display_cells(int occupied_cells)
 {
    int i, j;
    char str;
+   char output[5000];
+   int outputIndex = 0;
 
-   //system("CLS"); // Clear screen - works (at least) on windows console.
-   printf("%c",201);
+   system("CLS"); // Clear screen - works (at least) on windows console.
+//    printf("%c",201);
+   output[outputIndex++] = 201;
    for (i=0; i<FieldWidth; i++) {
-      printf("%c%c%c",205,205,205);
+    //   printf("%c%c%c",205,205,205);
+      output[outputIndex++] = 205;
+      output[outputIndex++] = 205;
+      output[outputIndex++] = 205;
    }
-   printf("%c\n",187);
+//    printf("%c\n",187);
+   output[outputIndex++] = 187;
+   output[outputIndex++] = '\n';
    
    for (i = 0; i < FieldHeight; i++)
    {
-      printf("%c",186);
+    //   printf("%c",186);
+      output[outputIndex++] = 186;
       for (j = 0; j < FieldWidth; j++)
       {
          
@@ -142,30 +183,56 @@ void display_cells(int occupied_cells)
          {
             case 0:
             {
-               printf("   ");
+            //    printf("   ");
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = ' ';
                break;
             }
             case 1:
             {
-               printf(" %c ",248);
+            //    printf(" %c ",248);
+               
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = 248;
+                output[outputIndex++] = ' ';
                break;
             }
             default:
             {
-               printf(" E ");
+            //    printf(" E ");
+               
+                output[outputIndex++] = ' ';
+                output[outputIndex++] = 'E';
+                output[outputIndex++] = ' ';
                break;
             }
          }
       }
-      printf("%c\n",186);
+    //   printf("%c\n",186);
+      
+      output[outputIndex++] = 186;
+      output[outputIndex++] = '\n';
       //printf("%s\n", str);
       
    }
-   printf("%c",200);
+//    printf("%c",200);
+      output[outputIndex++] = 200; 
    for (i=0; i<FieldWidth; i++) {
-      printf("%c%c%c",205,205,205);
+    //   printf("%c%c%c",205,205,205);
+    
+        output[outputIndex++] = 205;
+        output[outputIndex++] = 205;
+        output[outputIndex++] = 205;
    }
-   printf("%c\n",188);
+//    printf("%c\n",188);
+
+    output[outputIndex++] = 188;
+    output[outputIndex++] = '\n';
+
+    // printf("%s", output);
+    puts(output); // Use puts for faster printing. Writing to string and using printf is not faster (not "flicker-free")
+
    printf("Currently showing Gen.: %i with %i occupied Cells.\n", cell_generation, occupied_cells);
    if (Flag_stable == 1)
    {
