@@ -6,9 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int stack[3][20], height[3];
+
 void hanoi(int n, int start, int goal, int helper)
 {
    static int feld[goal][height[goal]];
+   
    if(n>0) {
       hanoi(n-1,start,helper,goal);
       printf("move disk from %d to %d\n", start, goal);

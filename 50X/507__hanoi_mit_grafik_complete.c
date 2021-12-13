@@ -40,6 +40,7 @@ void hanoi(int n, int start, int goal, int helper)
 
 int main() 
 {
+   setvbuf (stdout, NULL, _IONBF, 0);
    int i, n;
 
    printf("How many disks? (1-8)");
