@@ -28,11 +28,17 @@ void menu();
 
 int used_ids[MAX_IDS];
 int last_id;
+enum gender{
+   male,
+   female,
+   diverse,
+};
 struct person
 {
    char first_name[30];
    char last_name[30];
    int id;
+   enum gender student_gender;
 };
 
 struct person students[MAX_IDS];
@@ -116,12 +122,38 @@ void inputStudent(int i){
    gets(students[i].last_name);
 
    system("cls");
+
+   int g;
+   printf("Please enter the Students Gender\n");
+   printf("1. Male 2.Female 3.Diverse:");
+   scanf("%d", g);
+
+   switch (g)
+   {
+   case 1:
+      students[i].student_gender = male;
+      break;
+   
+   case 2:
+      students[i].student_gender = female;
+      break;
+   
+   case 3:
+      students[i].student_gender = diverse;
+      break;
+   
+   default:
+      students[i].student_gender = male;
+      break;
+   }
+
+   system("cls");
 }
 
 void printStudent(int i){
    system("cls");
    printf("Here you go:\n");
-   printf("ID: %d First Name: %s Last Name: %s\n",students[i].id, students[i].first_name, students[i].last_name);
+   printf("ID: %d First Name: %s Last Name: %s Gender:%s\n",students[i].id, students[i].first_name, students[i].last_name, students[i].student_gender);
    system("pause");
 }
 
@@ -129,7 +161,7 @@ void printAllStudents(){
    system("cls");
    printf("Here you go:\n");
    for (int k=0; k<=last_id; k++){
-      printf("ID: %d First Name: %s Last Name: %s\n",students[k].id, students[k].first_name, students[k].last_name);
+      printf("ID: %d First Name: %s Last Name: %s Gender:%s\n",students[k].id, students[k].first_name, students[k].last_name, students[k].student_gender);
    }
    system("pause");
 }
